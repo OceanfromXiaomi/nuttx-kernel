@@ -877,7 +877,11 @@ void files_initlist(FAR struct filelist *list);
  *
  ****************************************************************************/
 
+#ifdef CONFIG_DUMP_ON_EXIT
 void files_dumplist(FAR struct filelist *list);
+#else
+#  define files_dumplist(l)
+#endif
 
 /****************************************************************************
  * Name: files_getlist
@@ -1154,6 +1158,22 @@ int nx_open(FAR const char *path, int oflags, ...);
  ****************************************************************************/
 
 int fs_getfilep(int fd, FAR struct file **filep);
+
+/****************************************************************************
+ * Name: fs_reffilep
+ *
+ * Description:
+ *   To specify filep increase the reference count.
+ *
+ * Input Parameters:
+ *   None.
+ *
+ * Returned Value:
+ *   None.
+ *
+ ****************************************************************************/
+
+void fs_reffilep(FAR struct file *filep);
 
 /****************************************************************************
  * Name: fs_putfilep
