@@ -1,5 +1,5 @@
 /****************************************************************************
- * arch/arm64/src/common/arm64_switchcontext.c
+ * include/nuttx/pci/pci_ep_test.h
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -18,57 +18,28 @@
  *
  ****************************************************************************/
 
+#ifndef __INCLUDE_NUTTX_PCI_EP_TEST_H
+#define __INCLUDE_NUTTX_PCI_EP_TEST_H
+
 /****************************************************************************
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
-
-#include <sched.h>
-#include <assert.h>
-#include <debug.h>
-#include <nuttx/arch.h>
-#include <nuttx/sched.h>
-
-#include "sched/sched.h"
-#include "group/group.h"
-#include "clock/clock.h"
-#include "arm64_internal.h"
-
 /****************************************************************************
- * Public Functions
+ * Public Types
  ****************************************************************************/
 
+#ifdef CONFIG_PCI_EPF_TEST
+
 /****************************************************************************
- * Name: up_switch_context
+ * Name: pci_register_epf_test_device
  *
  * Description:
- *   A task is currently in the ready-to-run list but has been prepped
- *   to execute. Restore its context, and start execution.
- *
- * Input Parameters:
- *   tcb: Refers to the head task of the ready-to-run list
- *     which will be executed.
- *   rtcb: Refers to the running task which will be blocked.
+ *  Init a epf device test
  *
  ****************************************************************************/
 
-void up_switch_context(struct tcb_s *tcb, struct tcb_s *rtcb)
-{
-  /* Are we in an interrupt handler? */
+int pci_register_epf_test_device(FAR const char *epc_name);
+#endif
 
-  if (!up_interrupt_context())
-    {
-      /* Switch context to the context of the task at the head of the
-       * ready to run list.
-       */
-
-      arm64_switchcontext(&rtcb->xcp.regs, tcb->xcp.regs);
-
-      /* arm_switchcontext forces a context switch to the task at the
-       * head of the ready-to-run list.  It does not 'return' in the
-       * normal sense.  When it does return, it is because the blocked
-       * task is again ready to run and has execution priority.
-       */
-    }
-}
+#endif /* __INCLUDE_NUTTX_PCI_EP_TEST_H */
